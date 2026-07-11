@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SSC CGL 2027 — Weightage Command Center</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2430;
+    --ink-soft:#3D4450;
+    --paper:#F6F3EC;
+    --panel:#FFFFFF;
+    --hairline:#DCD5C4;
+    --gold:#B8862B;
+    --gold-soft:#EADFC4;
+    --brick:#A6432E;
+    --brick-soft:#F3E0DA;
+    --moss:#5C7A5A;
+    --moss-soft:#E1E9DD;
+    --slate:#5B6472;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif; font-size:15px; line-height:1.5;
+  }
+  h1,h2,h3{ font-family:'Fraunces',serif; font-weight:600; margin:0; }
+  .mono{ font-family:'IBM Plex Mono',monospace; }
+
+  /* ===== Header / Admit-card motif ===== */
+  header{
+    background:var(--ink); color:var(--paper); padding:28px 32px 22px;
+    position:relative; border-bottom:4px solid var(--gold);
+  }
+  header::after{
+    content:""; position:absolute; left:0; right:0; bottom:-8px; height:8px;
+    background-image: radial-gradient(circle, var(--paper) 3px, transparent 3px);
+    background-size: 16px 16px; background-position: 8px 0;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; letter-spacing:.12em; text-transform:uppercase;
+    font-size:11px; color:var(--gold-soft); margin-bottom:6px;
+  }
+  header h1{ font-size:30px; color:#fff; }
+  header p.sub{ margin-top:6px; color:#C9C2AE; max-width:640px; font-size:14px;}
+  .stampbox{
+    position:absolute; top:26px; right:32px; border:2px solid var(--gold);
+    color:var(--gold); font-family:'IBM Plex Mono',monospace; font-size:11px;
+    padding:8px 12px; border-radius:4px; text-align:center; letter-spacing:.06em;
+    transform:rotate(3deg); background:rgba(184,134,43,0.08);
+  }
+  .stampbox b{ display:block; font-size:16px; color:#fff; }
+
+  .factstrip{
+    display:flex; gap:0; margin-top:18px; border:1px solid #3A4454; border-radius:6px; overflow:hidden;
+    flex-wrap:wrap;
+  }
+  .factstrip div{
+    flex:1; min-width:120px; padding:10px 14px; border-right:1px solid #3A4454;
+  }
+  .factstrip div:last-child{border-right:none;}
+  .factstrip .fk{ font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:#9AA3B0; }
+  .factstrip .fv{ font-family:'IBM Plex Mono',monospace; font-size:15px; color:#fff; margin-top:2px;}
+
+  .notice{
+    margin:14px 32px 0; background:#2A3242; border-left:3px solid var(--gold);
+    color:#E4DFCF; font-size:12.5px; padding:10px 14px; border-radius:0 4px 4px 0;
+  }
+
+  /* ===== Nav ===== */
+  nav{
+    position:sticky; top:0; z-index:50; background:var(--paper);
+    border-bottom:1px solid var(--hairline); display:flex; gap:2px; padding:0 24px;
+    overflow-x:auto; white-space:nowrap;
+  }
+  nav button{
+    background:none; border:none; font-family:'IBM Plex Mono',monospace; font-size:12px;
+    letter-spacing:.03em; color:var(--slate); padding:14px 14px; cursor:pointer;
+    border-bottom:3px solid transparent; text-transform:uppercase;
+  }
+  nav button:hover{ color:var(--ink); }
+  nav button.active{ color:var(--ink); border-bottom-color:var(--gold); font-weight:600; }
+
+  main{ max-width:1180px; margin:0 auto; padding:28px 24px 80px; }
+  section.tab{ display:none; }
+  section.tab.active{ display:block; animation:fade .25s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  .section-head{ margin-bottom:16px; }
+  .section-head h2{ font-size:22px; }
+  .section-head p{ color:var(--slate); font-size:13.5px; margin-top:4px; max-width:760px;}
+
+  /* ===== Overview cards ===== */
+  .cards{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px;}
+  .card{ background:var(--panel); border:1px solid var(--hairline); border-radius:8px; padding:16px; }
+  .card .n{ font-family:'Fraunces',serif; font-size:26px; }
+  .card .l{ font-size:11.5px; color:var(--slate); text-transform:uppercase; letter-spacing:.05em; margin-top:2px;}
+  .card.gold{ border-top:3px solid var(--gold); }
+  .card.brick{ border-top:3px solid var(--brick); }
+  .card.moss{ border-top:3px solid var(--moss); }
+  .card.ink{ border-top:3px solid var(--ink); }
+
+  .ov-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .ov-panel{ background:var(--panel); border:1px solid var(--hairline); border-radius:8px; padding:18px; }
+  .ov-panel h3{ font-size:15px; margin-bottom:10px; }
+  .bar-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:12.5px;}
+  .bar-row .lab{ width:150px; flex-shrink:0; color:var(--ink-soft);}
+  .bar-track{ flex:1; height:8px; background:var(--hairline); border-radius:4px; overflow:hidden;}
+  .bar-fill{ height:100%; background:var(--gold); }
+  .bar-val{ width:34px; text-align:right; font-family:'IBM Plex Mono',monospace; color:var(--slate); font-size:11.5px;}
+
+  /* ===== Topic tables ===== */
+  table.topics{ width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--hairline); border-radius:8px; overflow:hidden;}
+  table.topics th{
+    background:var(--ink); color:#EDE8DA; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;
+    padding:10px 8px; text-align:left; font-family:'IBM Plex Mono',monospace; font-weight:500;
+  }
+  table.topics td{ padding:10px 8px; border-top:1px solid var(--hairline); font-size:13px; vertical-align:middle;}
+  table.topics tbody tr{ cursor:pointer; }
+  table.topics tbody tr:hover{ background:#FBF9F4; }
+  table.topics tr.detail-row{ display:none; background:#FBF7EC; cursor:default;}
+  table.topics tr.detail-row.open{ display:table-row; }
+  table.topics tr.detail-row td{ padding:14px 18px; border-top:none;}
+  .detail-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px 24px; font-size:12.5px; }
+  .detail-grid .dk{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; color:var(--gold); letter-spacing:.04em; margin-bottom:2px;}
+  .detail-grid .dv{ color:var(--ink-soft); }
+
+  .stars{ color:var(--gold); letter-spacing:1px; font-size:12px;}
+  .pill{ display:inline-block; padding:2px 8px; border-radius:20px; font-size:11px; font-family:'IBM Plex Mono',monospace;}
+  .pill.easy{ background:var(--moss-soft); color:var(--moss); }
+  .pill.moderate{ background:var(--gold-soft); color:#8C6A22; }
+  .pill.hard{ background:var(--brick-soft); color:var(--brick); }
+  .pill.roi-high{ background:var(--moss-soft); color:var(--moss); }
+  .pill.roi-medium{ background:#EFE9DA; color:#8C8060; }
+  .pill.roi-low{ background:var(--brick-soft); color:var(--brick); }
+  .trend{ font-family:'IBM Plex Mono',monospace; font-size:12px;}
+  .trend.up::before{ content:"▲ "; color:var(--moss); }
+  .trend.stable::before{ content:"● "; color:var(--slate); }
+  .trend.down::before{ content:"▼ "; color:var(--brick); }
+  .caret{ color:var(--slate); font-size:10px; }
+
+  .legend{ display:flex; gap:16px; flex-wrap:wrap; margin:10px 0 16px; font-size:11.5px; color:var(--slate);}
+  .legend span{ display:inline-flex; align-items:center; gap:5px;}
+  .dot{ width:8px; height:8px; border-radius:50%; display:inline-block;}
+
+  /* ===== 80/20 ranked list ===== */
+  .rank-table{ width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--hairline); border-radius:8px; overflow:hidden; font-size:13px;}
+  .rank-table th{ background:var(--ink); color:#EDE8DA; font-size:10.5px; text-transform:uppercase; padding:9px 8px; text-align:left; font-family:'IBM Plex Mono',monospace;}
+  .rank-table td{ padding:8px; border-top:1px solid var(--hairline); }
+  .rank-badge{ display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; background:var(--ink); color:var(--gold); font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;}
+  .cum-track{ width:90px; height:6px; background:var(--hairline); border-radius:3px; overflow:hidden; display:inline-block; vertical-align:middle; margin-right:6px;}
+  .cum-fill{ height:100%; background:var(--brick); }
+  .subj-tag{ font-size:10px; font-family:'IBM Plex Mono',monospace; padding:1px 6px; border-radius:3px; background:var(--gold-soft); color:#8C6A22;}
+
+  /* ===== Book order ===== */
+  .book-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .book-card{ background:var(--panel); border:1px solid var(--hairline); border-radius:8px; padding:16px 18px;}
+  .book-card h3{ font-size:14px; border-bottom:2px solid var(--gold); padding-bottom:8px; margin-bottom:10px;}
+  .book-card ol{ margin:0; padding-left:20px; font-size:12.8px; color:var(--ink-soft);}
+  .book-card ol li{ padding:3px 0; border-bottom:1px dashed var(--hairline);}
+  .book-card ol li:last-child{ border-bottom:none; }
+
+  /* ===== 90 day plan ===== */
+  table.plan{ width:100%; border-collapse:collapse; background:var(--panel); border:1px solid var(--hairline); border-radius:8px; overflow:hidden; font-size:12.3px;}
+  table.plan th{ background:var(--ink); color:#EDE8DA; font-size:10px; text-transform:uppercase; padding:8px 7px; text-align:left; font-family:'IBM Plex Mono',monospace;}
+  table.plan td{ padding:8px 7px; border-top:1px solid var(--hairline); vertical-align:top;}
+  .phase-tag{ font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:.05em;}
+
+  /* ===== Revision ===== */
+  .rev-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:20px;}
+  .rev-card{ background:var(--panel); border:1px solid var(--hairline); border-radius:8px; padding:14px 10px; text-align:center;}
+  .rev-card .stars{ font-size:14px; }
+  .rev-card .num{ font-family:'Fraunces',serif; font-size:24px; margin:6px 0 2px; color:var(--gold);}
+  .rev-card .lab{ font-size:10.5px; color:var(--slate); text-transform:uppercase;}
+  .rev-list{ background:var(--panel); border:1px solid var(--hairline); border-radius:8px; padding:16px 18px; margin-bottom:12px;}
+  .rev-list h3{ font-size:13.5px; margin-bottom:8px; }
+  .rev-list .items{ font-size:12.5px; color:var(--ink-soft); line-height:1.9;}
+  .tag{ display:inline-block; background:var(--paper); border:1px solid var(--hairline); border-radius:4px; padding:2px 7px; margin:2px 3px 2px 0; font-size:11.5px;}
+
+  /* ===== Strategy ===== */
+  .strat-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .strat-card{ background:var(--panel); border:1px solid var(--hairline); border-radius:8px; padding:16px 18px;}
+  .strat-card h3{ font-size:13.5px; margin-bottom:8px; display:flex; align-items:center; gap:8px;}
+  .strat-card h3 .sq{ width:8px; height:8px; background:var(--gold); display:inline-block; }
+  .strat-card ul{ margin:0; padding-left:18px; font-size:12.8px; color:var(--ink-soft); line-height:1.8;}
+
+  footer{ text-align:center; padding:24px; color:var(--slate); font-size:11.5px; border-top:1px solid var(--hairline); margin-top:20px;}
+
+  @media(max-width:900px){
+    .cards{grid-template-columns:repeat(2,1fr);}
+    .ov-grid, .book-grid, .strat-grid{grid-template-columns:1fr;}
+    .rev-grid{grid-template-columns:repeat(2,1fr);}
+    .detail-grid{grid-template-columns:1fr;}
+    table.topics{font-size:11px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="stampbox">TIER&nbsp;1<b>200</b>MARKS</div>
+  <div class="eyebrow">SSC CGL 2027 · Preparation Intelligence</div>
+  <h1>Topic-Wise Weightage Command Center</h1>
+  <p class="sub">Every Tier-1 topic broken down to its smallest unit — frequency, difficulty, ROI, book chapters, PYQ counts and shortcuts — plus the 80/20 priority order, book sequence, 90-day plan and revision schedule.</p>
+  <div class="factstrip">
+    <div><div class="fk">Questions</div><div class="fv">100</div></div>
+    <div><div class="fk">Marks</div><div class="fv">200</div></div>
+    <div><div class="fk">Duration</div><div class="fv">60 min</div></div>
+    <div><div class="fk">Per Section</div><div class="fv">25Q · 15min</div></div>
+    <div><div class="fk">Negative</div><div class="fv">−0.50</div></div>
+    <div><div class="fk">Nature</div><div class="fv">Qualifying</div></div>
+  </div>
+  <div class="notice">⚠ 2026 pattern update: SSC now runs an independent <b>15-minute sectional timer</b> per subject (four locked 25-question blocks) instead of one free-flowing 60-minute paper. Build section-wise speed, not just overall speed — you can no longer borrow time from a weak section.</div>
+</header>
+
+<nav id="tabnav"></nav>
+<main id="main"></main>
+
+<footer>Built from an analysis of SSC CGL Tier-1 papers (last 8–10 years) mapped against R.S. Aggarwal, Kiran &amp; Pinnacle PYQ sets, Lucent GK and SP Bakshi. Figures are analytical estimates for planning — always cross-check against the year's official cut-offs and your own mock data.</footer>
+
+<script>
+/* =========================================================
+   DATA
+========================================================= */
+const QUANT = [
+ {t:"Percentage", book:"R.S. Aggarwal — Ch.10 Percentage", q:1.5, freq:6, diff:"Easy", imp:5, hrs:8, pyq:220, trend:"stable", roi:"high",
+  trick:"Convert percentages to fractions (12.5%=1/8, 16.6%=1/6) and calculate mentally instead of long division.",
+  mistake:"Forgetting to change the base value when calculating successive percentage change (e.g. 20% up then 20% down ≠ 0% change)."},
+ {t:"Profit & Loss", book:"R.S. Aggarwal — Ch.11 Profit & Loss", q:1.5, freq:6, diff:"Moderate", imp:5, hrs:10, pyq:210, trend:"stable", roi:"high",
+  trick:"Use the ratio/fraction method (CP:SP) instead of plugging into the CP-SP-Profit% formula every time.",
+  mistake:"Applying discount% on the marked price when the question actually gives cost price, or vice-versa."},
+ {t:"Simple & Compound Interest", book:"R.S. Aggarwal — Ch.12 SI & CI", q:1.5, freq:6, diff:"Moderate", imp:4, hrs:8, pyq:180, trend:"stable", roi:"high",
+  trick:"For 2–3 year CI-SI difference questions, use the direct difference formulas instead of computing CI and SI separately.",
+  mistake:"Using the SI formula under exam pressure for a CI question that only mentions 'interest'."},
+ {t:"Ratio & Proportion", book:"R.S. Aggarwal — Ch.6 Ratio & Proportion", q:1, freq:4, diff:"Easy", imp:4, hrs:6, pyq:150, trend:"stable", roi:"high",
+  trick:"Keep ratios in their simplest integer form and scale the answer at the very end, not mid-calculation.",
+  mistake:"Adding ratio terms directly to quantities without first finding the common multiplier."},
+ {t:"Average", book:"R.S. Aggarwal — Ch.7 Average", q:1, freq:4, diff:"Easy", imp:3, hrs:5, pyq:130, trend:"stable", roi:"medium",
+  trick:"Use the deviation method from an assumed mean for large data sets instead of summing everything.",
+  mistake:"Forgetting to adjust the average when a value is replaced (not just added/removed)."},
+ {t:"Time & Work", book:"R.S. Aggarwal — Ch.14 Time & Work", q:1.5, freq:6, diff:"Moderate", imp:4, hrs:8, pyq:170, trend:"stable", roi:"high",
+  trick:"Assign total work as the LCM of given days — converts fractions into clean whole-number efficiencies.",
+  mistake:"Adding work-rates of people who work on alternate days instead of tracking day-by-day work done."},
+ {t:"Time, Speed & Distance", book:"R.S. Aggarwal — Ch.15 Time, Speed & Distance", q:1.5, freq:6, diff:"Moderate", imp:4, hrs:8, pyq:160, trend:"stable", roi:"high",
+  trick:"Memorise the km/h ↔ m/s conversion (×5/18, ×18/5) so you never waste time re-deriving it.",
+  mistake:"Ignoring direction (same/opposite) in relative speed problems, especially trains crossing each other."},
+ {t:"Mixture & Alligation", book:"R.S. Aggarwal — Ch.13 Mixture & Alligation", q:1, freq:4, diff:"Moderate", imp:3, hrs:5, pyq:100, trend:"stable", roi:"medium",
+  trick:"Draw the alligation cross diagrammatically — it solves most mixture ratios in one line.",
+  mistake:"Applying alligation to quantities that aren't concentrations/rates (it only works for weighted averages)."},
+ {t:"Number System", book:"R.S. Aggarwal — Ch.1–3 Number System, HCF-LCM", q:1.5, freq:6, diff:"Moderate", imp:4, hrs:10, pyq:190, trend:"stable", roi:"high",
+  trick:"Learn divisibility rules for 7, 11, 13 cold — they appear disguised in remainder-based questions.",
+  mistake:"Confusing HCF/LCM logic in 'find the greatest number that divides X,Y,Z leaving remainder r' type problems."},
+ {t:"Simplification & Approximation", book:"R.S. Aggarwal — Ch.4 Simplification", q:1.5, freq:6, diff:"Easy", imp:4, hrs:6, pyq:200, trend:"stable", roi:"high",
+  trick:"Master BODMAS with fraction-to-decimal shortcuts (1/8=.125, 1/16=.0625) for instant approximation.",
+  mistake:"Rushing the sign convention inside nested brackets, especially with vinculum (bar) expressions."},
+ {t:"Algebra", book:"R.S. Aggarwal — Ch.8–9 Algebraic Expressions & Identities", q:2.5, freq:10, diff:"Moderate", imp:5, hrs:14, pyq:260, trend:"up", roi:"high",
+  trick:"Keep the 8–10 standard identities (a³+b³, a²+b²+c² etc.) on a single revision card and drill them daily.",
+  mistake:"Trying to solve for individual variables when only the value of an expression (like a+1/a) is actually needed."},
+ {t:"Geometry (Lines, Triangles, Circles)", book:"R.S. Aggarwal — Ch.16–18 Geometry", q:3.5, freq:14, diff:"Hard", imp:5, hrs:20, pyq:340, trend:"up", roi:"high",
+  trick:"Redraw every figure to scale on rough sheet first — half of geometry errors are visual misreads, not concept gaps.",
+  mistake:"Assuming a triangle/quadrilateral is symmetric or right-angled when the figure doesn't state it."},
+ {t:"Mensuration (2D & 3D)", book:"R.S. Aggarwal — Ch.19–20 Mensuration", q:2.5, freq:10, diff:"Moderate", imp:5, hrs:14, pyq:240, trend:"stable", roi:"high",
+  trick:"Build one master formula sheet for area/volume/surface area of all solids — revise it like a multiplication table.",
+  mistake:"Mixing up total surface area with curved/lateral surface area for cones and cylinders."},
+ {t:"Trigonometry", book:"R.S. Aggarwal — Ch.21 Trigonometric Ratios & Identities", q:2.5, freq:10, diff:"Hard", imp:5, hrs:16, pyq:250, trend:"stable", roi:"high",
+  trick:"Memorise the 0°/30°/45°/60°/90° table and standard identities so hard questions reduce to substitution.",
+  mistake:"Sign errors when converting between complementary angles (sin(90°−θ)=cosθ) under time pressure."},
+ {t:"Height & Distance", book:"R.S. Aggarwal — Ch.22 Heights & Distances", q:1, freq:4, diff:"Moderate", imp:3, hrs:6, pyq:90, trend:"stable", roi:"medium",
+  trick:"Always sketch the angle of elevation/depression diagram first — most errors are from mixing up the two.",
+  mistake:"Using the wrong trig ratio (tan vs sin) because the diagram wasn't drawn before calculating."},
+ {t:"Data Interpretation", book:"R.S. Aggarwal — Ch.23 Data Interpretation (Bar/Pie/Table)", q:3, freq:12, diff:"Moderate", imp:5, hrs:14, pyq:220, trend:"up", roi:"high",
+  trick:"Read all axis labels/units once before attempting any sub-question — saves re-reading time across 4-5 linked questions.",
+  mistake:"Misreading pie-chart percentages as absolute values, or vice versa."},
+ {t:"Partnership", book:"R.S. Aggarwal — Ch.13(b) Partnership", q:0.5, freq:2, diff:"Moderate", imp:2, hrs:3, pyq:40, trend:"down", roi:"low",
+  trick:"Convert time-weighted capital contributions into simple ratios before dividing profit.",
+  mistake:"Forgetting to weight capital by the time period it was invested for."},
+ {t:"Boats & Streams / Pipes & Cisterns", book:"R.S. Aggarwal — Ch.14(b)/15(b)", q:1, freq:4, diff:"Moderate", imp:3, hrs:5, pyq:80, trend:"stable", roi:"medium",
+  trick:"Treat these as Time & Work / Speed variants — same LCM and relative-rate logic applies directly.",
+  mistake:"Adding upstream and downstream speeds instead of using them to isolate boat speed and stream speed separately."},
+];
+
+const REASONING = [
+ {t:"Analogy (Verbal & Non-Verbal)", book:"R.S. Aggarwal Reasoning — Ch.2–3 Analogy", q:3, freq:12, diff:"Easy", imp:5, hrs:8, pyq:300, trend:"stable", roi:"high",
+  trick:"Identify the exact relationship type first (part-whole, cause-effect, degree) before scanning options.",
+  mistake:"Picking an option that matches surface similarity but not the underlying relationship."},
+ {t:"Classification (Odd One Out)", book:"R.S. Aggarwal Reasoning — Ch.4 Classification", q:2, freq:8, diff:"Easy", imp:4, hrs:5, pyq:220, trend:"stable", roi:"high",
+  trick:"Check multiple angles — spelling pattern, category, numeric property — the 'odd one' logic often isn't the obvious one.",
+  mistake:"Stopping at the first pattern found instead of verifying it holds for all four/five options."},
+ {t:"Number & Alphabet Series", book:"R.S. Aggarwal Reasoning — Ch.5–6 Series", q:2.5, freq:10, diff:"Moderate", imp:5, hrs:8, pyq:260, trend:"stable", roi:"high",
+  trick:"Test difference-of-differences (2nd order) early if the 1st order differences aren't constant.",
+  mistake:"Assuming a purely arithmetic pattern when the series is actually alternating or double-pattern."},
+ {t:"Coding-Decoding", book:"R.S. Aggarwal Reasoning — Ch.7 Coding-Decoding", q:2, freq:8, diff:"Moderate", imp:4, hrs:6, pyq:200, trend:"stable", roi:"high",
+  trick:"Map letters to numbers (A=1...Z=26) on rough sheet once — most coding logic is a shift/reverse of this.",
+  mistake:"Assuming the same code letter always shifts by the same value across different questions in a set."},
+ {t:"Blood Relations", book:"R.S. Aggarwal Reasoning — Ch.9 Blood Relations", q:1.5, freq:6, diff:"Moderate", imp:4, hrs:5, pyq:150, trend:"stable", roi:"high",
+  trick:"Draw a family tree with generation levels (+1/-1) instead of tracking relations in your head.",
+  mistake:"Misreading gender-specific terms (e.g. 'sister-in-law' can mean two different relations)."},
+ {t:"Direction Sense", book:"R.S. Aggarwal Reasoning — Ch.10 Direction Sense Test", q:1.5, freq:6, diff:"Easy", imp:4, hrs:4, pyq:160, trend:"stable", roi:"high",
+  trick:"Plot every turn on a rough compass grid — don't try to visualise more than 2 turns mentally.",
+  mistake:"Confusing left/right turns with actual compass directions (N/S/E/W)."},
+ {t:"Order & Ranking", book:"R.S. Aggarwal Reasoning — Ch.11 Ranking & Time Sequence", q:1, freq:4, diff:"Easy", imp:3, hrs:3, pyq:100, trend:"stable", roi:"medium",
+  trick:"Fix the total count first, then place ranks from both ends to avoid off-by-one errors.",
+  mistake:"Miscounting 'position from the end' vs 'position from the start' in the same question."},
+ {t:"Syllogism", book:"R.S. Aggarwal Reasoning — Ch.12 Syllogism", q:2, freq:8, diff:"Moderate", imp:4, hrs:7, pyq:190, trend:"up", roi:"high",
+  trick:"Use Venn diagrams for every statement pair rather than relying on verbal logic — far fewer errors.",
+  mistake:"Treating 'some' as excluding 'all' — in syllogism, 'some A are B' doesn't rule out 'all A are B'."},
+ {t:"Venn Diagram", book:"R.S. Aggarwal Reasoning — Ch.13 Venn Diagrams", q:1.5, freq:6, diff:"Moderate", imp:3, hrs:5, pyq:130, trend:"stable", roi:"medium",
+  trick:"For 3-set relationship questions, pre-draw the standard 3-circle template and shade regions as you read.",
+  mistake:"Missing the overlapping region when a category applies to more than one group simultaneously."},
+ {t:"Statement-Conclusion / Assumption", book:"R.S. Aggarwal Reasoning — Ch.14 Statement & Conclusions", q:1.5, freq:6, diff:"Moderate", imp:3, hrs:5, pyq:120, trend:"stable", roi:"medium",
+  trick:"Judge conclusions only on the statement's literal content — never bring outside/general knowledge in.",
+  mistake:"Rejecting a logically valid conclusion because it 'feels' factually wrong in the real world."},
+ {t:"Mirror & Water Image", book:"R.S. Aggarwal Reasoning — Ch.16–17 Non-Verbal: Mirror/Water Images", q:2, freq:8, diff:"Easy", imp:4, hrs:5, pyq:180, trend:"stable", roi:"high",
+  trick:"For mirror images, flip left-right only; for water images, flip top-bottom only — never mix the two.",
+  mistake:"Rotating the figure instead of reflecting it."},
+ {t:"Paper Folding & Cutting", book:"R.S. Aggarwal Reasoning — Ch.18 Paper Folding & Cutting", q:1.5, freq:6, diff:"Moderate", imp:3, hrs:5, pyq:110, trend:"stable", roi:"medium",
+  trick:"Unfold mentally one fold at a time, mirroring the cut pattern across each fold line.",
+  mistake:"Forgetting that a single cut through folded paper creates a symmetric pattern on both halves."},
+ {t:"Figure Counting & Embedded Figures", book:"R.S. Aggarwal Reasoning — Ch.19 Figure Formation & Analysis", q:1.5, freq:6, diff:"Moderate", imp:3, hrs:5, pyq:100, trend:"stable", roi:"medium",
+  trick:"Count systematically by figure size (smallest to largest) rather than scanning randomly.",
+  mistake:"Double-counting overlapping shapes or missing figures formed by combining two smaller ones."},
+ {t:"Matrix & Missing Number", book:"R.S. Aggarwal Reasoning — Ch.20 Matrix / Missing Terms", q:1, freq:4, diff:"Moderate", imp:3, hrs:4, pyq:80, trend:"stable", roi:"medium",
+  trick:"Check row-wise and column-wise patterns separately — the rule usually applies to only one direction.",
+  mistake:"Assuming the pattern is purely additive when it's actually multiplicative or positional."},
+ {t:"Puzzle & Seating Arrangement", book:"R.S. Aggarwal Reasoning — Ch.21 Seating Arrangement & Puzzles", q:1.5, freq:6, diff:"Hard", imp:4, hrs:8, pyq:90, trend:"up", roi:"high",
+  trick:"Place the most-constrained clue first (fixed position/direct statement), then work outward.",
+  mistake:"Committing to one arrangement too early instead of keeping two possibilities open until a clue resolves it."},
+ {t:"Dice, Cubes, Calendar & Clock", book:"R.S. Aggarwal Reasoning — Ch.22–23 Dice/Cubes & Calendar-Clock", q:1, freq:4, diff:"Moderate", imp:2, hrs:4, pyq:60, trend:"down", roi:"low",
+  trick:"For dice, memorise the opposite-face rule from two given views instead of visualising rotation each time.",
+  mistake:"Forgetting that odd days repeat every 7 days when solving calendar 'which day of week' problems."},
+];
+
+const GA = [
+ {t:"Indian History (Ancient, Medieval, Modern & Freedom Struggle)", book:"Lucent GK — History section", q:4, freq:16, diff:"Moderate", imp:5, hrs:20, pyq:380, trend:"stable", roi:"high",
+  trick:"Build timelines for the freedom movement (1857→1947) with year-event-person triplets — this is the most repeated GA sub-area.",
+  mistake:"Confusing similarly-named movements/acts (e.g. different Acts of Parliament) due to rote memorisation without context."},
+ {t:"Geography (Indian & World)", book:"Lucent GK — Geography section", q:3.5, freq:14, diff:"Moderate", imp:5, hrs:18, pyq:320, trend:"stable", roi:"high",
+  trick:"Learn physical geography (rivers, mountains, climate zones) with a map in front of you — visual memory recalls faster than text.",
+  mistake:"Mixing up state capitals/borders and neighbouring-country facts under exam time pressure."},
+ {t:"Indian Polity & Constitution", book:"Lucent GK — Polity section", q:3, freq:12, diff:"Moderate", imp:5, hrs:16, pyq:300, trend:"stable", roi:"high",
+  trick:"Tag every Article/Amendment with one keyword (e.g. Art.32 = 'Right to Constitutional Remedies') for instant recall.",
+  mistake:"Confusing Fundamental Rights with Directive Principles when a question tests which one is enforceable."},
+ {t:"Indian Economy", book:"Lucent GK — Economy section", q:2.5, freq:10, diff:"Moderate", imp:4, hrs:14, pyq:220, trend:"stable", roi:"high",
+  trick:"Link static economy concepts (repo rate, GDP, Five-Year Plans) to the current RBI/Budget figures for dual-purpose recall.",
+  mistake:"Quoting outdated numeric figures (old repo rate, old plan periods) instead of the latest available data."},
+ {t:"Static GK (Books & Authors, Awards, Schemes, Important Days)", book:"Lucent GK — Miscellaneous / Static GK section", q:2, freq:8, diff:"Easy", imp:4, hrs:12, pyq:200, trend:"stable", roi:"high",
+  trick:"Group by category (all Nobel categories together, all government schemes together) — clusters recall better than a flat list.",
+  mistake:"Learning a fact in isolation without its category, making it hard to eliminate wrong options in MCQs."},
+ {t:"Physics", book:"Lucent GK — Science: Physics section", q:2, freq:8, diff:"Moderate", imp:4, hrs:12, pyq:180, trend:"stable", roi:"medium",
+  trick:"Focus on everyday-application physics (units, simple machines, light/sound) — SSC rarely asks derivation-level physics.",
+  mistake:"Over-preparing numerical physics instead of the conceptual, one-line-fact style SSC actually asks."},
+ {t:"Chemistry", book:"Lucent GK — Science: Chemistry section", q:2, freq:8, diff:"Moderate", imp:4, hrs:12, pyq:180, trend:"stable", roi:"medium",
+  trick:"Master the periodic table trends and common compound uses — a small, high-yield chunk of the chapter.",
+  mistake:"Ignoring everyday chemistry (soaps, fertilizers, common gases) in favour of only theoretical topics."},
+ {t:"Biology", book:"Lucent GK — Science: Biology section", q:2.5, freq:10, diff:"Moderate", imp:4, hrs:12, pyq:210, trend:"stable", roi:"high",
+  trick:"Human physiology (diseases, vitamins, deficiency disorders) is the single most repeated biology cluster — prioritise it.",
+  mistake:"Mixing up vitamin names with their deficiency diseases (a very common trap in options)."},
+ {t:"Current Affairs (last 6–12 months)", book:"Monthly current affairs digest / newspaper — not covered in Lucent", q:5, freq:20, diff:"Moderate", imp:5, hrs:30, pyq:400, trend:"up", roi:"high",
+  trick:"Maintain a rolling one-page monthly summary (appointments, awards, summits, schemes, sports) instead of reading news passively.",
+  mistake:"Revising current affairs only once — without 3–4 repeated revisions, this section decays fastest from memory."},
+ {t:"Sports", book:"Lucent GK — Miscellaneous: Sports section", q:1, freq:4, diff:"Easy", imp:3, hrs:5, pyq:90, trend:"stable", roi:"medium",
+  trick:"Focus on major tournaments, trophies/cups and recent winners rather than obscure historical records.",
+  mistake:"Skipping sports entirely, assuming low weightage — it's a near-guaranteed easy 1 mark if revised."},
+ {t:"Miscellaneous (National Symbols, Honours, Full Forms)", book:"Lucent GK — Miscellaneous section", q:1, freq:4, diff:"Easy", imp:2, hrs:4, pyq:70, trend:"stable", roi:"medium",
+  trick:"Keep a single-page 'random facts' sheet and revise it in the last 10 days before the exam only.",
+  mistake:"Spending disproportionate study time here relative to its low, unpredictable weightage."},
+];
+
+const ENGLISH = [
+ {t:"Reading Comprehension", book:"SP Bakshi — Comprehension Passages chapter", q:4, freq:16, diff:"Moderate", imp:5, hrs:16, pyq:300, trend:"stable", roi:"high",
+  trick:"Read the questions before the passage — it tells you exactly what to scan for, saving a full re-read.",
+  mistake:"Selecting the option that's factually true in general but isn't actually stated in the passage."},
+ {t:"Cloze Test", book:"SP Bakshi — Cloze Test chapter", q:4, freq:16, diff:"Moderate", imp:5, hrs:14, pyq:280, trend:"stable", roi:"high",
+  trick:"Read the full passage once for tone/context before filling any blank — many blanks depend on later sentences.",
+  mistake:"Filling each blank in isolation without checking that all chosen words keep the passage grammatically and logically consistent together."},
+ {t:"Error Spotting", book:"SP Bakshi — Spotting Errors chapter", q:2.5, freq:10, diff:"Hard", imp:5, hrs:16, pyq:260, trend:"stable", roi:"high",
+  trick:"Check subject-verb agreement and preposition usage first — these two rules catch the majority of SSC error-spotting questions.",
+  mistake:"Over-analysing a grammatically fine sentence because it 'sounds odd', and missing the actual planted error."},
+ {t:"Sentence Improvement", book:"SP Bakshi — Sentence Improvement chapter", q:2, freq:8, diff:"Moderate", imp:4, hrs:10, pyq:200, trend:"stable", roi:"high",
+  trick:"Read the underlined part alone first to spot the error type, then match it to the option that fixes only that.",
+  mistake:"Picking a technically correct option that changes the sentence's original meaning."},
+ {t:"Fill in the Blanks", book:"SP Bakshi — Fillers chapter", q:1.5, freq:6, diff:"Moderate", imp:4, hrs:8, pyq:160, trend:"stable", roi:"medium",
+  trick:"Identify whether the blank needs a preposition, conjunction, or vocabulary word — that narrows options fast.",
+  mistake:"Choosing a word that fits grammatically but doesn't match the sentence's intended meaning/tone."},
+ {t:"Synonyms", book:"SP Bakshi — Vocabulary: Synonyms chapter", q:1.5, freq:6, diff:"Easy", imp:4, hrs:8, pyq:170, trend:"stable", roi:"high",
+  trick:"Learn words in root-word families (e.g. all words from 'bene-' = good) rather than as unconnected lists.",
+  mistake:"Picking the most 'familiar-sounding' option instead of checking the precise shade of meaning."},
+ {t:"Antonyms", book:"SP Bakshi — Vocabulary: Antonyms chapter", q:1.5, freq:6, diff:"Easy", imp:4, hrs:8, pyq:170, trend:"stable", roi:"high",
+  trick:"Learn synonym-antonym pairs together — one flashcard set covers both question types simultaneously.",
+  mistake:"Confusing near-antonyms with unrelated words that merely sound similar to the given word."},
+ {t:"One Word Substitution", book:"SP Bakshi — One Word Substitution chapter", q:1.5, freq:6, diff:"Moderate", imp:4, hrs:10, pyq:190, trend:"stable", roi:"high",
+  trick:"Group substitutions by theme (person-types, place-types, fear-types/phobias) for faster recall.",
+  mistake:"Confusing two closely related one-word substitutes (e.g. two different '-phobia' or '-cide' words)."},
+ {t:"Idioms & Phrases", book:"SP Bakshi — Idioms & Phrasal Verbs chapter", q:2, freq:8, diff:"Moderate", imp:4, hrs:10, pyq:180, trend:"stable", roi:"high",
+  trick:"Learn idioms in short example sentences, not standalone — context cements the meaning far better.",
+  mistake:"Taking an idiom literally instead of recognising its figurative meaning."},
+ {t:"Spelling / Word Check", book:"SP Bakshi — Spellings chapter", q:1, freq:4, diff:"Easy", imp:3, hrs:4, pyq:90, trend:"down", roi:"medium",
+  trick:"Focus on commonly-confused spelling pairs (e.g. 'accommodate', 'occurrence') that repeat across years.",
+  mistake:"Skipping this topic entirely since it feels 'unlearnable' — a short focused list covers most repeats."},
+ {t:"Sentence / Para Rearrangement", book:"SP Bakshi — Jumbled Sentences / Para Jumbles chapter", q:2.5, freq:10, diff:"Hard", imp:5, hrs:14, pyq:220, trend:"up", roi:"high",
+  trick:"Find the opening sentence first (no pronoun referring backward), then chain sentences using pronoun/connector clues.",
+  mistake:"Trying to logically 'guess' the paragraph's story instead of following grammatical linking clues."},
+ {t:"Active-Passive Voice", book:"SP Bakshi — Voice chapter", q:1, freq:4, diff:"Moderate", imp:3, hrs:6, pyq:100, trend:"stable", roi:"medium",
+  trick:"Memorise the tense-wise passive structure table (is/was/has been + V3) instead of deriving it each time.",
+  mistake:"Forgetting to change the pronoun case correctly (he→him) when converting to passive voice."},
+ {t:"Direct-Indirect Speech (Narration)", book:"SP Bakshi — Narration chapter", q:1, freq:4, diff:"Moderate", imp:3, hrs:6, pyq:100, trend:"stable", roi:"medium",
+  trick:"Learn the tense-backshift and pronoun-change rules as one combined checklist, applied line by line.",
+  mistake:"Forgetting to change time/place words (today→that day, here→there) when converting to indirect speech."},
+];
+
+const SUBJECT_META = {
+  quant:{label:"Quantitative Aptitude", data:QUANT, color:"var(--gold)"},
+  reasoning:{label:"General Intelligence & Reasoning", data:REASONING, color:"var(--gold)"},
+  ga:{label:"General Awareness", data:GA, color:"var(--gold)"},
+  english:{label:"English Comprehension", data:ENGLISH, color:"var(--gold)"},
+};
+
+/* 80/20 ranked list — built from cumulative % of the 100-question paper */
+const PRIORITY = [
+ ["GA — Current Affairs (6–12 mo)",5,"ga","Highest single weightage in the entire paper; refreshes every attempt so it rewards continuous effort."],
+ ["English — Reading Comprehension",4,"english","Guaranteed 3–5 Qs every year; skill transfers directly to Tier-2 as well."],
+ ["English — Cloze Test",4,"english","Consistently high-frequency, and the same vocabulary/grammar prep covers both this and RC."],
+ ["GA — Indian History",4,"ga","Largest static-GK sub-area; timeline-based recall makes it highly learnable."],
+ ["GA — Geography",3.5,"ga","Second-largest static-GK sub-area; strong visual/map-based recall."],
+ ["Quant — Geometry",3.5,"quant","Highest-weightage quant topic and a rising trend over recent papers."],
+ ["Reasoning — Analogy",3,"reasoning","Easiest high-frequency reasoning topic; near-guaranteed marks with basic practice."],
+ ["GA — Polity & Constitution",3,"ga","Core static-GK pillar; questions repeat structurally year-to-year."],
+ ["Quant — Data Interpretation",3,"quant","Rising trend; 1 set often yields 3-4 questions for one reading effort."],
+ ["Quant — Algebra",2.5,"quant","Rising trend; identity-based questions are fast once formulas are memorised."],
+ ["Quant — Mensuration",2.5,"quant","Stable high-frequency; one master formula sheet covers nearly all questions."],
+ ["Quant — Trigonometry",2.5,"quant","Stable high-frequency; standard-angle table makes most questions formulaic."],
+ ["GA — Economy",2.5,"ga","Stable, and overlaps heavily with current-affairs Budget/RBI updates."],
+ ["GA — Biology",2.5,"ga","Highest-yield science section; human physiology repeats constantly."],
+ ["English — Error Spotting",2.5,"english","High-frequency and high-difficulty — strong ROI once grammar rules are drilled."],
+ ["English — Para/Sentence Rearrangement",2.5,"english","Rising trend; logic-based, so accuracy improves fast with practice."],
+ ["Reasoning — Number/Alphabet Series",2.5,"reasoning","Stable high-frequency; pattern recognition improves quickly with drilling."],
+ ["Reasoning — Coding-Decoding",2,"reasoning","Stable; a small set of coding logics covers almost all variations asked."],
+ ["Reasoning — Syllogism",2,"reasoning","Rising trend; Venn-diagram method makes this very learnable."],
+ ["English — Idioms & Phrases",2,"english","Stable; a curated 200-idiom list covers most repeats."],
+ ["English — Sentence Improvement",2,"english","Stable; overlaps directly with error-spotting prep."],
+ ["GA — Static GK (Books, Awards, Schemes)",2,"ga","Stable and easy — high ROI for low study hours."],
+ ["GA — Physics",2,"ga","Stable; conceptual, low-derivation questions only."],
+ ["GA — Chemistry",2,"ga","Stable; periodic table + everyday chemistry covers most of it."],
+ ["Reasoning — Classification",2,"reasoning","Stable and easy; near-guaranteed marks."],
+ ["Quant — Percentage",1.5,"quant","Foundational topic that also feeds Profit/Loss and DI questions."],
+ ["Quant — Profit & Loss",1.5,"quant","Stable; ratio-method makes it fast once practiced."],
+ ["Quant — Simple & Compound Interest",1.5,"quant","Stable; a handful of shortcut formulas cover most variations."],
+ ["Quant — Number System",1.5,"quant","Stable; divisibility rules unlock most tricky questions."],
+ ["Quant — Simplification & Approximation",1.5,"quant","Stable and easy; near-guaranteed marks for minimal study."],
+ ["Reasoning — Blood Relations",1.5,"reasoning","Stable; family-tree method removes almost all ambiguity."],
+ ["Reasoning — Direction Sense",1.5,"reasoning","Stable and easy; guaranteed marks with a rough-grid habit."],
+ ["English — Fill in the Blanks",1.5,"english","Stable; overlaps with vocabulary and grammar prep already being done."],
+];
+
+/* Book chapter order (recommended study sequence, not necessarily the book's native order) */
+const BOOKS = {
+ "SP Bakshi — Objective General English":[
+  "Synonyms (build vocabulary base first)","Antonyms","One Word Substitution","Idioms & Phrasal Verbs",
+  "Spotting Errors","Sentence Improvement","Active-Passive Voice","Narration (Direct-Indirect Speech)",
+  "Fill in the Blanks","Cloze Test","Sentence/Para Rearrangement","Reading Comprehension (integrates everything)","Spellings"
+ ],
+ "R.S. Aggarwal — Quantitative Aptitude":[
+  "Number System & HCF-LCM","Simplification (BODMAS, Approximation)","Squares, Cubes & Surds","Average",
+  "Ratio & Proportion","Percentage","Profit & Loss","Simple Interest","Compound Interest",
+  "Time & Work","Pipes & Cisterns","Time, Speed & Distance","Boats & Streams","Mixture & Alligation",
+  "Algebra (Expressions & Identities)","Geometry (Lines, Triangles, Circles)","Mensuration (2D & 3D)",
+  "Trigonometric Ratios & Identities","Height & Distance","Data Interpretation"
+ ],
+ "R.S. Aggarwal — Verbal & Non-Verbal Reasoning":[
+  "Analogy (Verbal)","Classification","Series Completion (Number/Alphabet)","Coding-Decoding",
+  "Blood Relations","Direction Sense Test","Ranking & Time Sequence","Syllogism","Venn Diagrams",
+  "Statement & Conclusions/Assumptions","Seating Arrangement & Puzzles",
+  "Mirror Images","Water Images","Paper Folding & Cutting","Embedded Figures & Figure Counting",
+  "Analogy (Non-Verbal)","Classification (Non-Verbal)","Series (Non-Verbal)","Dice & Cubes","Calendar & Clock"
+ ],
+ "Lucent — General Knowledge":[
+  "Modern Indian History (freedom struggle first — highest yield)","Ancient & Medieval Indian History",
+  "Indian Polity & Constitution","Indian Economy","Geography (Indian, then World)",
+  "Physics","Chemistry","Biology","Miscellaneous / Static GK (Books, Awards, Schemes, Days)",
+  "[Run in parallel throughout] Current Affairs — daily 20-min digest, monthly compiled revision"
+ ],
+};
+
+/* 90-day plan */
+const PLAN = [
+ ["1–2","Foundation","Number System, Simplification, Percentage, Ratio & Average · Analogy, Classification, Series, Coding-Decoding · Synonyms, Antonyms, One Word Sub · History (Modern) + Polity basics","RSA Quant Ch.1–6 · RSA Reasoning Ch.2–7 · SP Bakshi Vocabulary · Lucent History/Polity",5,"Daily 20-min flash revision of prior day","300+ topic-wise","Weekly 1 sectional mock"],
+ ["3–4","Foundation","Profit & Loss, SI-CI, Time & Work, TSD, Mixture · Blood Relations, Direction, Ranking, Syllogism · Error Spotting, Sentence Improvement · Geography + Economy","RSA Quant Ch.7–14 · RSA Reasoning Ch.8–13 · SP Bakshi Grammar · Lucent Geography/Economy",6,"Sunday full-week revision + start topic-tests","400+ topic-wise","2 sectional mocks + 1 full mock"],
+ ["5–6","Core Advanced","Algebra, Geometry (start) · Venn, Statement-Conclusion, Seating basics · Fillers, Idioms, Active-Passive · Science: Physics + Chemistry","RSA Quant Ch.15–17 · RSA Reasoning Ch.14, 21 · SP Bakshi Idioms/Voice · Lucent Physics/Chem",6,"Weak-topic-only revision (from mock error log)","400+ topic-wise + PYQ sets","2 sectional + 2 full mocks"],
+ ["7–8","Core Advanced","Geometry (complete), Mensuration, Trigonometry · Non-verbal (Mirror/Water/Folding), Puzzles · Narration, Spellings · Science: Biology + Static GK","RSA Quant Ch.18–21 · RSA Reasoning Ch.16–19 · SP Bakshi Narration · Lucent Biology/Static GK",7,"Full formula-sheet revision (Geometry, Trig, Mensuration)","500+ topic-wise + 3 PYQ papers","2 sectional + 3 full mocks"],
+ ["9–10","Application & Speed","Data Interpretation, mixed problem sets (all quant) · Matrix, Dice/Cubes, advanced puzzles · Reading Comprehension, Para Rearrangement","RSA Quant Ch.22–23 revision · RSA Reasoning Ch.20, 22–23 · SP Bakshi RC/Jumbles",7,"Cross-topic mixed revision (interleaved practice)","600+ mixed PYQs","3 full mocks + timed sectional drills"],
+ ["11","Current Affairs Sprint","Deep current affairs (last 12 months) + static GK linking · light quant/reasoning maintenance","Monthly CA digest compilation · Lucent cross-reference",6,"Daily CA recall test (50 Qs)","2 full-length CA-heavy mocks","2 full mocks"],
+ ["12","Full Revision","All four subjects — formula sheets, error logs, idiom/vocab lists, CA one-pager","All books — final revision pass only, no new topics",7,"Complete syllabus revision using error log from all mocks","Revisit every wrong PYQ so far","Daily 1 full mock + analysis"],
+ ["13 (Final)","Exam-Ready Drilling","Full-length mocks under sectional timing, weak-area micro-drills only, mental math speed drills","Formula sheets + error log only",6,"Same-day error review after every mock — no new content","Solve previous year's actual Tier-1 paper 2–3 times","Daily full mock under strict 15-min-per-section timing"],
+];
+
+/* Revision counts */
+const REV = {
+ 5:["GA Current Affairs","English Reading Comprehension","English Cloze Test","GA Indian History","GA Geography",
+    "Quant Geometry","GA Polity & Constitution","Quant Data Interpretation","Quant Algebra","Quant Mensuration",
+    "Quant Trigonometry","English Error Spotting","English Para Rearrangement","Reasoning Analogy"],
+ 4:["GA Economy","GA Biology","Reasoning Series","Reasoning Coding-Decoding","Reasoning Syllogism",
+    "English Sentence Improvement","English Idioms & Phrases","Quant Percentage","Quant Profit & Loss",
+    "Quant SI & CI","Quant Number System","Quant Simplification","Reasoning Classification","English Synonyms","English Antonyms","English One Word Substitution","Quant Time & Work","Quant Time Speed Distance"],
+ 3:["GA Static GK","GA Physics","GA Chemistry","Reasoning Blood Relations","Reasoning Direction Sense",
+    "English Fill in the Blanks","Quant Ratio & Proportion","Reasoning Venn Diagram","Reasoning Puzzle & Seating","Quant Mixture & Alligation","Quant Average"],
+ 2:["GA Sports","Reasoning Order & Ranking","Reasoning Statement-Conclusion","Reasoning Mirror/Water Image",
+    "Reasoning Paper Folding & Cutting","Reasoning Figure Counting","English Spellings","English Active-Passive Voice","English Narration","Quant Height & Distance","Quant Boats/Pipes"],
+ 1:["GA Miscellaneous","Reasoning Matrix & Missing Number","Reasoning Dice/Cubes/Calendar/Clock","Quant Partnership"],
+};
+
+/* =========================================================
+   RENDER
+========================================================= */
+const tabs = [
+ {id:"overview", label:"Overview"},
+ {id:"quant", label:"Quant"},
+ {id:"reasoning", label:"Reasoning"},
+ {id:"ga", label:"Gen. Awareness"},
+ {id:"english", label:"English"},
+ {id:"priority", label:"80/20 Priority"},
+ {id:"books", label:"Book Order"},
+ {id:"plan", label:"90-Day Plan"},
+ {id:"revision", label:"Revision"},
+ {id:"strategy", label:"Strategy"},
+];
+
+const nav = document.getElementById("tabnav");
+const main = document.getElementById("main");
+
+tabs.forEach((tb,i)=>{
+  const b = document.createElement("button");
+  b.textContent = tb.label;
+  b.dataset.id = tb.id;
+  if(i===0) b.classList.add("active");
+  b.onclick = ()=> switchTab(tb.id);
+  nav.appendChild(b);
+});
+
+function switchTab(id){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active", b.dataset.id===id));
+  document.querySelectorAll("section.tab").forEach(s=>s.classList.toggle("active", s.id===id));
+}
+
+function starStr(n){ return "★".repeat(n) + "☆".repeat(5-n); }
+function diffPill(d){ return `<span class="pill ${d.toLowerCase()}">${d}</span>`; }
+function roiPill(r){ const map={high:"High ROI",medium:"Medium ROI",low:"Low ROI"}; return `<span class="pill roi-${r}">${map[r]}</span>`; }
+function trendSpan(tr){ const map={up:["up","Increasing"],stable:["stable","Stable"],down:["down","Decreasing"]}; return `<span class="trend ${map[tr][0]}">${map[tr][1]}</span>`; }
+
+function buildSubjectSection(key){
+  const meta = SUBJECT_META[key];
+  const totalQ = meta.data.reduce((s,d)=>s+d.q,0).toFixed(1);
+  let rows = "";
+  meta.data.forEach((d,idx)=>{
+    const rid = key+"_"+idx;
+    rows += `
+    <tr onclick="toggleDetail('${rid}')">
+      <td>${d.t} <span class="caret">▾</span></td>
+      <td class="mono">${d.q}</td>
+      <td class="mono">${d.freq}%</td>
+      <td>${diffPill(d.diff)}</td>
+      <td class="stars">${starStr(d.imp)}</td>
+      <td class="mono">${d.hrs}h</td>
+      <td class="mono">${d.pyq}</td>
+      <td>${trendSpan(d.trend)}</td>
+      <td>${roiPill(d.roi)}</td>
+    </tr>
+    <tr class="detail-row" id="${rid}"><td colspan="9">
+      <div class="detail-grid">
+        <div><div class="dk">Book &amp; Chapter</div><div class="dv">${d.book}</div></div>
+        <div><div class="dk">Estimated PYQs (8–10 yrs)</div><div class="dv">${d.pyq} questions across analysed papers</div></div>
+        <div><div class="dk">Common trick / shortcut</div><div class="dv">${d.trick}</div></div>
+        <div><div class="dk">Common mistake</div><div class="dv">${d.mistake}</div></div>
+      </div>
+    </td></tr>`;
+  });
+
+  return `
+  <div class="section-head">
+    <h2>${meta.label}</h2>
+    <p>25 questions in this section every Tier-1 attempt (15-minute sectional timer). Total mapped avg. questions across topics below: ~${totalQ}. Click any row to see book chapter, tricks and common mistakes.</p>
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--moss)"></span> High ROI = big return for study time invested</span>
+    <span><span class="dot" style="background:var(--gold)"></span> ★ Importance = weight in prioritising your calendar</span>
+    <span>▲ Increasing trend across recent papers &nbsp;·&nbsp; ● Stable &nbsp;·&nbsp; ▼ Decreasing</span>
+  </div>
+  <table class="topics">
+    <thead><tr>
+      <th>Topic</th><th>Avg Q</th><th>Freq %</th><th>Difficulty</th><th>Importance</th><th>Study Hrs</th><th>PYQs (8–10y)</th><th>Trend</th><th>ROI</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function toggleDetail(id){
+  document.getElementById(id).classList.toggle("open");
+}
+
+function buildOverview(){
+  const allTotals = Object.keys(SUBJECT_META).map(k=>{
+    const d = SUBJECT_META[k].data;
+    return {key:k,label:SUBJECT_META[k].label, q: d.reduce((s,x)=>s+x.q,0), topics:d.length};
+  });
+  let cards = `
+   <div class="cards">
+     <div class="card gold"><div class="n">100</div><div class="l">Total Tier-1 Questions</div></div>
+     <div class="card brick"><div class="n">−0.50</div><div class="l">Negative Marking / Wrong Ans.</div></div>
+     <div class="card moss"><div class="n">46</div><div class="l">Smallest-Unit Topics Mapped</div></div>
+     <div class="card ink"><div class="n">15 min</div><div class="l">Sectional Timer / Subject</div></div>
+   </div>`;
+  let bars = "";
+  allTotals.forEach(a=>{
+    bars += `<div class="bar-row"><div class="lab">${a.label}</div><div class="bar-track"><div class="bar-fill" style="width:${(a.q/25*100).toFixed(0)}%"></div></div><div class="bar-val">${a.topics} topics</div></div>`;
+  });
+
+  const diffCounts = {Easy:0,Moderate:0,Hard:0};
+  Object.values(SUBJECT_META).forEach(m=>m.data.forEach(d=>diffCounts[d.diff]++));
+  const totalTopics = diffCounts.Easy+diffCounts.Moderate+diffCounts.Hard;
+  let diffBars = "";
+  [["Easy","var(--moss)"],["Moderate","var(--gold)"],["Hard","var(--brick)"]].forEach(([k,c])=>{
+    diffBars += `<div class="bar-row"><div class="lab">${k}</div><div class="bar-track"><div class="bar-fill" style="width:${(diffCounts[k]/totalTopics*100).toFixed(0)}%; background:${c}"></div></div><div class="bar-val">${diffCounts[k]}</div></div>`;
+  });
+
+  const roiCounts = {high:0,medium:0,low:0};
+  Object.values(SUBJECT_META).forEach(m=>m.data.forEach(d=>roiCounts[d.roi]++));
+  let roiBars = "";
+  [["high","High ROI","var(--moss)"],["medium","Medium ROI","var(--gold)"],["low","Low ROI","var(--brick)"]].forEach(([k,label,c])=>{
+    roiBars += `<div class="bar-row"><div class="lab">${label}</div><div class="bar-track"><div class="bar-fill" style="width:${(roiCounts[k]/totalTopics*100).toFixed(0)}%; background:${c}"></div></div><div class="bar-val">${roiCounts[k]}</div></div>`;
+  });
+
+  return `
+  <div class="section-head">
+    <h2>Exam Snapshot</h2>
+    <p>SSC CGL Tier-1 2026 pattern: 4 sections × 25 questions × 15-min sectional timer, 200 marks total, qualifying stage. Below is how the 46 smallest-unit topics distribute across subjects, difficulty and ROI.</p>
+  </div>
+  ${cards}
+  <div class="ov-grid">
+    <div class="ov-panel"><h3>Topics mapped per subject</h3>${bars}</div>
+    <div class="ov-panel"><h3>Difficulty distribution (all 46 topics)</h3>${diffBars}</div>
+    <div class="ov-panel"><h3>ROI distribution (all 46 topics)</h3>${roiBars}</div>
+    <div class="ov-panel"><h3>How to use this dashboard</h3>
+      <p style="font-size:12.8px;color:var(--ink-soft);line-height:1.7;">
+      Start on <b>80/20 Priority</b> to see the ~33 topics that build roughly 80% of your score. Use <b>Book Order</b> to sequence your reading,
+      then follow <b>90-Day Plan</b> week by week. Revisit each subject tab to click into a topic's book chapter, shortcuts and common mistakes.
+      Use <b>Revision</b> to know exactly how many passes each topic needs, and <b>Strategy</b> for the big-picture calls (skip/master/scoring).</p>
+    </div>
+  </div>`;
+}
+
+function buildPriority(){
+  let cum = 0;
+  let rows = "";
+  PRIORITY.forEach((p,i)=>{
+    cum += p[1];
+    rows += `<tr>
+      <td><span class="rank-badge">${i+1}</span></td>
+      <td class="mono">${p[1]}%</td>
+      <td><span class="cum-track"><span class="cum-fill" style="width:${Math.min(cum,100).toFixed(0)}%"></span></span><span class="mono" style="font-size:11px;">${cum.toFixed(1)}%</span></td>
+      <td>${p[0]} <span class="subj-tag">${p[2].toUpperCase()}</span></td>
+      <td style="color:var(--ink-soft);font-size:12.3px;">${p[3]}</td>
+    </tr>`;
+  });
+  return `
+  <div class="section-head">
+    <h2>High Priority Topics — The 80/20 Rule</h2>
+    <p>Ranked by average questions contributed to the full 100-question Tier-1 paper. Rows are the highest-yield topics first; cumulative % crosses ~80% by rank 33 of the 46 mapped topics — study these first and hardest.</p>
+  </div>
+  <table class="rank-table">
+    <thead><tr><th>Rank</th><th>Share of Paper</th><th>Cumulative</th><th>Topic</th><th>Why it's high priority</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function buildBooks(){
+  let cards = "";
+  Object.entries(BOOKS).forEach(([book,chaps])=>{
+    let items = chaps.map(c=>`<li>${c}</li>`).join("");
+    cards += `<div class="book-card"><h3>${book}</h3><ol>${items}</ol></div>`;
+  });
+  return `
+  <div class="section-head">
+    <h2>Book Completion Order</h2>
+    <p>Recommended reading sequence per book — ordered for fastest score gains first, not necessarily the book's own chapter numbering. Current Affairs runs in parallel with Lucent throughout your prep, since it isn't a fixed static chapter.</p>
+  </div>
+  <div class="book-grid">${cards}</div>`;
+}
+
+function buildPlan(){
+  let rows = "";
+  PLAN.forEach(row=>{
+    rows += `<tr>
+      <td class="phase-tag">Wk ${row[0]}</td>
+      <td>${row[1]}</td>
+      <td>${row[2]}</td>
+      <td>${row[3]}</td>
+      <td class="mono">${row[4]}h/day</td>
+      <td>${row[5]}</td>
+      <td>${row[6]}</td>
+      <td>${row[7]}</td>
+    </tr>`;
+  });
+  return `
+  <div class="section-head">
+    <h2>90-Day Study Plan</h2>
+    <p>13 weeks, phased: Foundation → Core Advanced → Application &amp; Speed → Current Affairs Sprint → Full Revision → Exam-Ready Drilling. Adjust daily hours to your actual availability, but keep the topic order — it follows the weightage ranking above.</p>
+  </div>
+  <table class="plan">
+    <thead><tr><th>Week</th><th>Phase</th><th>Topics</th><th>Book Chapters</th><th>Daily Hrs</th><th>Revision</th><th>PYQs</th><th>Mock Tests</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function buildRevision(){
+  let cards = "";
+  [5,4,3,2,1].forEach(n=>{
+    cards += `<div class="rev-card"><div class="stars">${starStr(n)}</div><div class="num">${n+2}×</div><div class="lab">Revisions</div></div>`;
+  });
+  let lists = "";
+  [5,4,3,2,1].forEach(n=>{
+    const tags = REV[n].map(t=>`<span class="tag">${t}</span>`).join("");
+    lists += `<div class="rev-list"><h3>${starStr(n)} Importance → ${n+2} revisions</h3><div class="items">${tags}</div></div>`;
+  });
+  return `
+  <div class="section-head">
+    <h2>Revision Priority</h2>
+    <p>Higher-importance topics decay faster under exam pressure if under-revised — they need more passes, not just more initial study hours.</p>
+  </div>
+  <div class="rev-grid">${cards}</div>
+  ${lists}`;
+}
+
+function buildStrategy(){
+  return `
+  <div class="section-head">
+    <h2>Smart Strategy</h2>
+    <p>The big-picture calls — where to spend your limited time in the final stretch.</p>
+  </div>
+  <div class="strat-grid">
+    <div class="strat-card"><h3><span class="sq"></span>Finish first</h3><ul>
+      <li>Number System, Simplification &amp; Percentage — unlock every other quant topic</li>
+      <li>Analogy, Classification &amp; Series — fastest reasoning marks with least prep</li>
+      <li>Synonyms, Antonyms &amp; One Word Substitution — vocabulary base for RC/Cloze later</li>
+      <li>Modern Indian History &amp; Polity basics — foundation for all other GA recall</li>
+    </ul></div>
+    <div class="strat-card"><h3><span class="sq"></span>Topics to master</h3><ul>
+      <li>Geometry, Mensuration &amp; Trigonometry — highest quant weightage combined</li>
+      <li>Data Interpretation — rising trend, high multi-question yield per set</li>
+      <li>Error Spotting &amp; Para Rearrangement — hardest English topics but high ROI</li>
+      <li>Current Affairs — the single biggest GA weightage, needs continuous revision</li>
+    </ul></div>
+    <div class="strat-card"><h3><span class="sq"></span>Skip or de-prioritise if time is short</h3><ul>
+      <li>Partnership (Quant) — lowest frequency and declining trend</li>
+      <li>Dice, Cubes, Calendar &amp; Clock — low frequency, declining trend</li>
+      <li>GA Miscellaneous (obscure honours/full-forms) — unpredictable, low yield</li>
+      <li>Spellings — small, fixed list only; don't over-invest hours here</li>
+    </ul></div>
+    <div class="strat-card"><h3><span class="sq"></span>Most scoring chapters</h3><ul>
+      <li>Simplification, Percentage — near-guaranteed marks, minimal prep needed</li>
+      <li>Analogy, Classification, Direction Sense — easiest reasoning marks</li>
+      <li>Synonyms/Antonyms, One Word Substitution — fast, memorisation-driven marks</li>
+      <li>Static GK &amp; Sports — quick wins if revised in the final fortnight</li>
+    </ul></div>
+    <div class="strat-card"><h3><span class="sq"></span>Frequently repeated across years</h3><ul>
+      <li>Geometry, Mensuration, Trigonometry, DI, Algebra (Quant)</li>
+      <li>Analogy, Series, Coding-Decoding, Syllogism (Reasoning)</li>
+      <li>History, Polity, Geography, Biology (GA)</li>
+      <li>RC, Cloze, Error Spotting, Para Rearrangement (English)</li>
+    </ul></div>
+    <div class="strat-card"><h3><span class="sq"></span>Rarely asked / long-tail</h3><ul>
+      <li>Partnership, Height &amp; Distance edge cases (Quant)</li>
+      <li>Dice/Cubes, Matrix, obscure calendar logic (Reasoning)</li>
+      <li>GA Miscellaneous trivia beyond the standard static-GK clusters</li>
+      <li>Spellings beyond the commonly-confused word list (English)</li>
+    </ul></div>
+    <div class="strat-card"><h3><span class="sq"></span>Common question patterns to expect</h3><ul>
+      <li>Quant: multi-step percentage/ratio chains, DI sets with 3–5 linked sub-questions</li>
+      <li>Reasoning: 2-statement syllogism pairs, 4–5 person seating puzzles with mixed clues</li>
+      <li>GA: fact + closest-option elimination style (2 plausible options, 1 clearly wrong pair)</li>
+      <li>English: single-error-type sentences (subject-verb OR preposition, rarely both)</li>
+    </ul></div>
+    <div class="strat-card"><h3><span class="sq"></span>Expected weightage direction — next SSC CGL exam</h3><ul>
+      <li>Quant: Geometry, Algebra and DI likely to hold or slightly increase share</li>
+      <li>Reasoning: Syllogism and Seating/Puzzle likely to keep rising</li>
+      <li>GA: Current Affairs share likely to stay dominant or grow further</li>
+      <li>English: Para Rearrangement and Error Spotting likely to hold high weightage</li>
+      <li>Structural: expect continued strict enforcement of the 15-min sectional timer — factor this into every mock</li>
+    </ul></div>
+  </div>`;
+}
+
+/* Assemble all sections */
+main.innerHTML = `
+  <section class="tab active" id="overview">${buildOverview()}</section>
+  <section class="tab" id="quant">${buildSubjectSection('quant')}</section>
+  <section class="tab" id="reasoning">${buildSubjectSection('reasoning')}</section>
+  <section class="tab" id="ga">${buildSubjectSection('ga')}</section>
+  <section class="tab" id="english">${buildSubjectSection('english')}</section>
+  <section class="tab" id="priority">${buildPriority()}</section>
+  <section class="tab" id="books">${buildBooks()}</section>
+  <section class="tab" id="plan">${buildPlan()}</section>
+  <section class="tab" id="revision">${buildRevision()}</section>
+  <section class="tab" id="strategy">${buildStrategy()}</section>
+`;
+</script>
+</body>
+</html>
